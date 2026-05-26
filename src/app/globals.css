@@ -1,26 +1,401 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   DESIGN SYSTEM TOKENS — StudyAI (from DESIGN.md / Stitch)
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Surface scale (dark-first; the app always uses dark mode) --- */
+  --surface:                  #0b1326;
+  --surface-dim:              #0b1326;
+  --surface-bright:           #31394d;
+  --surface-container-lowest: #060e20;
+  --surface-container-low:    #131b2e;
+  --surface-container:        #171f33;
+  --surface-container-high:   #222a3d;
+  --surface-container-highest:#2d3449;
+
+  /* --- On-surface text --- */
+  --on-surface:               #dae2fd;
+  --on-surface-variant:       #c4c7de;
+  --inverse-surface:          #dae2fd;
+  --inverse-on-surface:       #283044;
+
+  /* --- Outline / borders --- */
+  --outline:                  #958ea0;
+  --outline-variant:          #494454;
+  --surface-variant:          #2d3449;
+  --surface-tint:             #d0bcff;
+
+  /* --- Primary (Violet) --- */
+  --primary:                  #d0bcff;
+  --on-primary:               #3c0091;
+  --primary-container:        #a078ff;
+  --on-primary-container:     #340080;
+  --inverse-primary:          #6d3bd7;
+  --primary-fixed:            #e9ddff;
+  --primary-fixed-dim:        #d0bcff;
+  --on-primary-fixed:         #23005c;
+  --on-primary-fixed-variant: #5516be;
+
+  /* --- Secondary (Electric Blue) --- */
+  --secondary:                #adc6ff;
+  --on-secondary:             #002e6a;
+  --secondary-container:      #0566d9;
+  --on-secondary-container:   #e6ecff;
+  --secondary-fixed:          #d8e2ff;
+  --secondary-fixed-dim:      #adc6ff;
+  --on-secondary-fixed:       #001a42;
+  --on-secondary-fixed-variant:#004395;
+
+  /* --- Tertiary --- */
+  --tertiary:                 #cebdff;
+  --on-tertiary:              #381385;
+  --tertiary-container:       #9b7fed;
+  --on-tertiary-container:    #31057e;
+  --tertiary-fixed:           #e8ddff;
+  --tertiary-fixed-dim:       #cebdff;
+  --on-tertiary-fixed:        #21005e;
+  --on-tertiary-fixed-variant:#4f319c;
+
+  /* --- Error --- */
+  --error:                    #ffb4ab;
+  --on-error:                 #690005;
+  --error-container:          #93000a;
+  --on-error-container:       #ffdad6;
+
+  /* --- Background --- */
+  --background:               #0b1326;
+  --on-background:            #dae2fd;
+
+  /* --- Shadcn compat aliases (used by shadcn/ui components) --- */
+  --card:                     #171f33;
+  --card-foreground:          #dae2fd;
+  --popover:                  #131b2e;
+  --popover-foreground:       #dae2fd;
+  --muted:                    #222a3d;
+  --muted-foreground:         #c4c7de;
+  --accent:                   rgba(208,188,255,0.12);
+  --accent-foreground:        #dae2fd;
+  --destructive:              #ffb4ab;
+  --border:                   rgba(255,255,255,0.07);
+  --input:                    rgba(255,255,255,0.05);
+  --ring:                     #d0bcff;
+  --radius:                   0.75rem;
+
+  /* --- Sidebar --- */
+  --sidebar:                  #0d1728;
+  --sidebar-foreground:       #dae2fd;
+  --sidebar-primary:          #d0bcff;
+  --sidebar-primary-foreground: #3c0091;
+  --sidebar-accent:           rgba(208,188,255,0.10);
+  --sidebar-accent-foreground: #dae2fd;
+  --sidebar-border:           rgba(255,255,255,0.06);
+  --sidebar-ring:             #d0bcff;
 }
 
+/* Shadcn also reads from .dark — keep them in sync */
+.dark {
+  --background:               #0b1326;
+  --foreground:               #dae2fd;
+  --card:                     #171f33;
+  --card-foreground:          #dae2fd;
+  --popover:                  #131b2e;
+  --popover-foreground:       #dae2fd;
+  --primary:                  #d0bcff;
+  --primary-foreground:       #3c0091;
+  --secondary:                #222a3d;
+  --secondary-foreground:     #dae2fd;
+  --muted:                    #222a3d;
+  --muted-foreground:         #c4c7de;
+  --accent:                   rgba(208,188,255,0.12);
+  --accent-foreground:        #dae2fd;
+  --destructive:              #ffb4ab;
+  --border:                   rgba(255,255,255,0.07);
+  --input:                    rgba(255,255,255,0.05);
+  --ring:                     #d0bcff;
+  --sidebar:                  #0d1728;
+  --sidebar-foreground:       #dae2fd;
+  --sidebar-primary:          #d0bcff;
+  --sidebar-primary-foreground: #3c0091;
+  --sidebar-accent:           rgba(208,188,255,0.10);
+  --sidebar-accent-foreground: #dae2fd;
+  --sidebar-border:           rgba(255,255,255,0.06);
+  --sidebar-ring:             #d0bcff;
+}
+
+/* ============================================================
+   TAILWIND V4 THEME REGISTRATION
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* Surface tokens → Tailwind utilities */
+  --color-surface:                  var(--surface);
+  --color-surface-dim:              var(--surface-dim);
+  --color-surface-bright:           var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low:    var(--surface-container-low);
+  --color-surface-container:        var(--surface-container);
+  --color-surface-container-high:   var(--surface-container-high);
+  --color-surface-container-highest:var(--surface-container-highest);
+  --color-surface-variant:          var(--surface-variant);
+  --color-surface-tint:             var(--surface-tint);
+
+  /* Text tokens */
+  --color-on-surface:               var(--on-surface);
+  --color-on-surface-variant:       var(--on-surface-variant);
+  --color-inverse-surface:          var(--inverse-surface);
+  --color-inverse-on-surface:       var(--inverse-on-surface);
+
+  /* Outline tokens */
+  --color-outline:                  var(--outline);
+  --color-outline-variant:          var(--outline-variant);
+
+  /* Primary tokens */
+  --color-primary:                  var(--primary);
+  --color-on-primary:               var(--on-primary);
+  --color-primary-container:        var(--primary-container);
+  --color-on-primary-container:     var(--on-primary-container);
+  --color-inverse-primary:          var(--inverse-primary);
+
+  /* Secondary tokens */
+  --color-secondary:                var(--secondary);
+  --color-on-secondary:             var(--on-secondary);
+  --color-secondary-container:      var(--secondary-container);
+  --color-on-secondary-container:   var(--on-secondary-container);
+
+  /* Tertiary tokens */
+  --color-tertiary:                 var(--tertiary);
+  --color-on-tertiary:              var(--on-tertiary);
+  --color-tertiary-container:       var(--tertiary-container);
+  --color-on-tertiary-container:    var(--on-tertiary-container);
+
+  /* Error tokens */
+  --color-error:                    var(--error);
+  --color-on-error:                 var(--on-error);
+  --color-error-container:          var(--error-container);
+  --color-on-error-container:       var(--on-error-container);
+
+  /* Background */
+  --color-background:               var(--background);
+  --color-on-background:            var(--on-background);
+
+  /* shadcn aliases */
+  --color-foreground:               var(--on-surface);
+  --color-card:                     var(--card);
+  --color-card-foreground:          var(--card-foreground);
+  --color-popover:                  var(--popover);
+  --color-popover-foreground:       var(--popover-foreground);
+  --color-primary-foreground:       var(--on-primary);
+  --color-secondary-foreground:     var(--on-surface);
+  --color-muted:                    var(--muted);
+  --color-muted-foreground:         var(--muted-foreground);
+  --color-accent:                   var(--accent);
+  --color-accent-foreground:        var(--accent-foreground);
+  --color-destructive:              var(--destructive);
+  --color-border:                   var(--border);
+  --color-input:                    var(--input);
+  --color-ring:                     var(--ring);
+
+  /* Radius scale (from DESIGN.md) */
+  --radius-sm:  0.25rem;   /* sm */
+  --radius-md:  0.75rem;   /* md / buttons */
+  --radius-lg:  1rem;      /* cards */
+  --radius-xl:  1.5rem;    /* containers */
+
+  /* Sidebar */
+  --color-sidebar:                  var(--sidebar);
+  --color-sidebar-foreground:       var(--sidebar-foreground);
+  --color-sidebar-primary:          var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:           var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:           var(--sidebar-border);
+  --color-sidebar-ring:             var(--sidebar-ring);
+
+  /* Font → Inter (set in layout.tsx) */
+  --font-sans: var(--font-inter), 'Inter', sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+* {
+  border-color: var(--color-border);
+  outline-color: var(--color-ring);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   GLASSMORPHISM UTILITIES
+   ============================================================ */
+
+/* Level 1 — Standard glass pane (cards, containers) */
+.glass-pane {
+  background: rgba(23, 31, 51, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Level 2 — Elevated glass (popovers, modals) */
+.glass-popover {
+  background: rgba(13, 20, 38, 0.8);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    0 0 0 1px rgba(208, 188, 255, 0.06),
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(208, 188, 255, 0.04);
+}
+
+/* Interactive glass — lifts with inner glow on hover */
+.glass-interactive {
+  background: rgba(23, 31, 51, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-interactive:hover {
+  background: rgba(34, 42, 61, 0.65);
+  border-color: rgba(208, 188, 255, 0.15);
+  box-shadow:
+    0 0 0 1px rgba(208, 188, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Primary gradient button glow */
+.btn-primary-glow {
+  background: linear-gradient(135deg, #a078ff 0%, #6d3bd7 50%, #0566d9 100%);
+  box-shadow:
+    0 0 20px rgba(160, 120, 255, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-primary-glow:hover {
+  box-shadow:
+    0 0 28px rgba(160, 120, 255, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.btn-primary-glow:active {
+  transform: translateY(0);
+  box-shadow:
+    0 0 16px rgba(160, 120, 255, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* AI response bubble — glass with violet left accent */
+.bubble-ai {
+  background: rgba(23, 31, 51, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 2px solid #d0bcff;
+}
+
+/* Recessed glass input (search / chat input well) */
+.input-glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-glass:focus,
+.input-glass:focus-within {
+  border-color: rgba(208, 188, 255, 0.45);
+  box-shadow:
+    0 0 0 3px rgba(208, 188, 255, 0.08),
+    0 0 20px rgba(208, 188, 255, 0.05);
+  outline: none;
+}
+
+/* Progress glow line */
+.progress-glow {
+  background: linear-gradient(90deg, #a078ff, #adc6ff, #cebdff);
+  box-shadow: 0 0 8px rgba(160, 120, 255, 0.6);
+}
+
+/* Explicit Gradients for Landing Page to bypass Tailwind v4 scanner issues */
+.text-gradient-hero {
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+  -webkit-background-clip: text;
+  color: transparent;
+  background-clip: text;
+}
+.text-gradient-step {
+  background: linear-gradient(to bottom right, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+  background-clip: text;
+}
+.bg-gradient-feature-1 { background: linear-gradient(to bottom right, var(--color-primary), var(--color-primary-container)); }
+.bg-gradient-feature-2 { background: linear-gradient(to bottom right, var(--color-secondary), var(--color-secondary-container)); }
+.bg-gradient-feature-3 { background: linear-gradient(to bottom right, var(--color-tertiary), var(--color-tertiary-container)); }
+.bg-gradient-feature-4 { background: linear-gradient(to bottom right, #0566d9, #004395); }
+
+/* Active nav indicator pill */
+.nav-active-pip {
+  background: linear-gradient(90deg, #d0bcff, #adc6ff);
+  box-shadow: 0 0 8px rgba(208, 188, 255, 0.5);
+}
+.nav-active-pip {
+  background: linear-gradient(90deg, #d0bcff, #adc6ff);
+  box-shadow: 0 0 8px rgba(208, 188, 255, 0.5);
+}
+
+/* ============================================================
+   MICRO-ANIMATIONS
+   ============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(208,188,255,0.2); }
+  50%       { box-shadow: 0 0 20px rgba(208,188,255,0.5); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.animate-fade-up { animation: fade-up 0.3s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(208, 188, 255, 0.12);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(208, 188, 255, 0.22);
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: rgba(160, 120, 255, 0.35);
+  color: #dae2fd;
 }

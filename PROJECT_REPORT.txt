@@ -1,0 +1,743 @@
+================================================================================
+                         PROJECT REPORT
+               ScholarAI — AI-Powered Study Assistant
+================================================================================
+
+Prepared by   : Aryan Soni
+Project Title : ScholarAI — AI-Powered Study Assistant
+Technology    : Next.js 16, Convex, Clerk, OpenRouter (GPT-4o-mini)
+Year          : 2026
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. Introduction and Problem Statement
+2. Previous Work / Literature Survey
+3. Major Objective & Scope of Project
+4. Problem Analysis and Requirement Specification
+5. Detailed Design (Modeling, ERD, and DFD)
+6. Hardware and Software Platform Environment
+7. Experimental Setup and Results Analysis
+8. Project Limitations and Future Scope
+9. List of References
+
+================================================================================
+CHAPTER 1: INTRODUCTION AND PROBLEM STATEMENT
+================================================================================
+
+1.1 Introduction
+----------------
+The rapid expansion of digital learning resources has fundamentally changed the
+way students engage with academic content. While access to study material has
+never been greater, the ability to process, understand, and retain that material
+at scale remains a persistent challenge. Students today deal with hundreds of
+pages of textbooks, research papers, lecture notes, and reference documents —
+often without adequate time or tools to study them deeply.
+
+Artificial Intelligence (AI), particularly Large Language Models (LLMs), has
+emerged as a transformative technology in the education domain. These models can
+understand natural language, summarise complex information, generate practice
+questions, and explain concepts in ways tailored to the individual learner.
+However, most general-purpose AI tools are not designed with students in mind:
+they are not integrated with a personal knowledge base, cannot reference the
+student's own uploaded materials, and do not provide structured study workflows.
+
+ScholarAI is a web-based application designed to bridge this gap. It provides a
+unified platform where students can upload their study documents (PDFs, images,
+text files), automatically extract and index the textual content, and then engage
+with that content using a conversational AI tutor. The system supports multiple
+study modes — including Q&A, Summarization, Quiz generation, and Flashcard
+creation — all grounded in the student's own uploaded material.
+
+1.2 Problem Statement
+----------------------
+Students face several interconnected challenges when studying from digital
+materials:
+
+(a) Information Overload: Large volumes of study material make it difficult to
+    identify key concepts and retain critical information.
+
+(b) Lack of Interactivity: Static PDFs and documents do not allow students to
+    ask questions, test themselves, or request explanations.
+
+(c) Fragmented Tools: Students must switch between multiple applications —
+    document readers, note-taking apps, quiz generators, and chatbots — with
+    no integration between them.
+
+(d) Generic AI Responses: General-purpose AI assistants do not have access to
+    a student's specific materials and therefore provide generic, often
+    unreliable answers.
+
+(e) Accessibility: Premium study tools are often expensive and inaccessible to
+    students in developing regions.
+
+ScholarAI addresses all of these problems by combining document management,
+AI-powered text extraction, and a context-aware study assistant into a single,
+cohesive, and freely accessible web application.
+
+================================================================================
+CHAPTER 2: PREVIOUS WORK / LITERATURE SURVEY
+================================================================================
+
+2.1 AI in Education
+--------------------
+The integration of Artificial Intelligence in education (AI-Ed) has been an
+active research area since the 1980s, with Intelligent Tutoring Systems (ITS)
+being among the earliest implementations. Systems like Carnegie Learning's
+Cognitive Tutor demonstrated that adaptive, AI-driven instruction could
+significantly improve student outcomes (Koedinger & Corbett, 2006).
+
+With the advent of deep learning and transformer-based language models (Vaswani
+et al., 2017 — "Attention Is All You Need"), the capabilities of AI in
+understanding and generating natural language expanded dramatically. GPT-3
+(Brown et al., 2020) and subsequent models demonstrated strong performance on
+reading comprehension, summarisation, and question-answering tasks.
+
+2.2 Retrieval-Augmented Generation (RAG)
+-----------------------------------------
+A key technique for grounding AI responses in specific documents is
+Retrieval-Augmented Generation (RAG), introduced by Lewis et al. (2020). RAG
+combines a retrieval mechanism (fetching relevant text chunks from a document
+corpus) with a language model to generate answers that are accurate and grounded
+in the provided source material. ScholarAI implements a simplified version of
+this pattern by injecting the full extracted text of the user-selected document
+directly into the AI prompt context.
+
+2.3 Related Applications
+--------------------------
+Several commercial and research applications occupy similar problem spaces:
+
+(a) ChatPDF (chatpdf.com): Allows users to upload a PDF and chat with it.
+    Limitation: No multi-mode study support, no knowledge base management.
+
+(b) Quizlet AI: AI-powered flashcard and quiz generation.
+    Limitation: Not based on user-uploaded arbitrary documents.
+
+(c) Notion AI: Integrated AI assistant within a note-taking workspace.
+    Limitation: Not specialised for study workflows; requires manual note input.
+
+(d) Adobe Acrobat AI Assistant: Summarises and answers questions about PDFs.
+    Limitation: Requires a premium Adobe subscription; closed ecosystem.
+
+(e) Perplexity AI: AI-powered search and document Q&A.
+    Limitation: Not designed for personal knowledge base management.
+
+ScholarAI differentiates itself by combining personal document management,
+automated text extraction, multi-mode AI study interactions, and chat history
+persistence in a single open-source-friendly stack — at no cost to the student.
+
+2.4 Technology Foundations
+---------------------------
+(a) Large Language Models: The GPT-4o-mini model (OpenAI, accessed via
+    OpenRouter) is used for its strong instruction-following, speed, and low
+    cost per token.
+
+(b) Next.js App Router: Chosen for its hybrid server/client rendering
+    capabilities, built-in API routes, and excellent developer experience.
+
+(c) Convex: A real-time reactive database chosen for its seamless integration
+    with React, type-safe queries, built-in file storage, and real-time
+    subscriptions without requiring manual WebSocket management.
+
+(d) Clerk: Industry-standard authentication provider with support for social
+    login, JWT-based session management, and pre-built UI components.
+
+================================================================================
+CHAPTER 3: MAJOR OBJECTIVES & SCOPE OF PROJECT
+================================================================================
+
+3.1 Primary Objectives
+------------------------
+1. Build a full-stack web application that allows students to manage a personal
+   digital knowledge base of study documents.
+
+2. Implement automated text extraction from uploaded documents (PDFs, images,
+   text files) to make content queryable by an AI.
+
+3. Develop a conversational AI chat interface that uses the student's own
+   document as context, enabling accurate, grounded responses.
+
+4. Provide multiple AI-driven study modes: Q&A, Summarization, Quiz generation,
+   and Flashcard generation.
+
+5. Persist all chat sessions and messages to a database so students can review
+   past study interactions.
+
+6. Implement a polished, modern UI with a dark-mode aesthetic appropriate for
+   long study sessions.
+
+7. Enable copy and edit actions on chat messages to improve study workflow
+   efficiency.
+
+3.2 Scope of the Project
+-------------------------
+IN SCOPE:
+- User authentication and account management (via Clerk)
+- Document upload (PDF, image, text) with file size support up to 50MB
+- Server-side PDF text extraction using native parsing
+- AI OCR for image-based documents
+- AI chat with document context injection
+- Four study modes: Q&A, Summarize, Quiz, Flashcards
+- Chat history persistence (Convex database)
+- Knowledge base management: list, view, delete documents
+- Copy AI response / Edit user message UX features
+- Responsive dark-mode UI
+
+OUT OF SCOPE (for current version):
+- Mobile native applications (iOS / Android)
+- Real-time collaborative study sessions
+- Offline mode / Progressive Web App (PWA)
+- Support for video or audio lecture files
+- Advanced RAG with vector embeddings
+- Plagiarism detection
+- Learning analytics dashboard
+
+================================================================================
+CHAPTER 4: PROBLEM ANALYSIS AND REQUIREMENT SPECIFICATION
+================================================================================
+
+4.1 Functional Requirements
+-----------------------------
+FR-01: The system shall allow users to register and log in using email/password
+       or social login providers (Google, GitHub).
+
+FR-02: The system shall allow authenticated users to upload documents in PDF,
+       image (PNG, JPG, WEBP), and plain text formats.
+
+FR-03: The system shall automatically extract text from uploaded documents upon
+       upload completion.
+
+FR-04: The system shall store extracted text in the database and associate it
+       with the corresponding document record.
+
+FR-05: The system shall display a knowledge base view listing all documents
+       uploaded by the authenticated user.
+
+FR-06: The system shall allow users to delete documents from their knowledge
+       base.
+
+FR-07: The system shall allow users to select a document as context for an AI
+       chat session.
+
+FR-08: The system shall support four study modes: Q&A, Summarize, Quiz,
+       Flashcards.
+
+FR-09: The system shall send user prompts along with document context to the AI
+       and display the response in a chat interface.
+
+FR-10: The system shall persist chat messages to the database.
+
+FR-11: The system shall allow users to copy AI responses to the clipboard.
+
+FR-12: The system shall allow users to edit past user messages by re-loading
+       them into the input field.
+
+FR-13: The system shall allow users to start a new chat session from the
+       dashboard.
+
+4.2 Non-Functional Requirements
+---------------------------------
+NFR-01 Performance: The AI response latency shall be under 5 seconds for
+       standard-length documents under normal load.
+
+NFR-02 Scalability: The backend (Convex) shall handle concurrent users without
+       manual infrastructure management.
+
+NFR-03 Security: All API routes shall be protected; file uploads shall be
+       authenticated via Convex Storage pre-signed URLs.
+
+NFR-04 Usability: The UI shall be intuitive for a first-time user without
+       requiring a tutorial.
+
+NFR-05 Reliability: Clerk authentication shall have 99.9% uptime (SLA).
+
+NFR-06 Data Privacy: User documents and chat messages shall be scoped
+       exclusively to the authenticated user's account.
+
+NFR-07 Maintainability: Code shall be TypeScript-typed throughout for
+       correctness and developer ergonomics.
+
+4.3 Use Case Analysis
+----------------------
+The system recognises the following primary actor: Student (authenticated user).
+External systems acting as secondary actors: Clerk (authentication), OpenRouter
+(AI inference), and Convex (data persistence and file storage).
+
+Key use cases identified:
+UC-01: Register / Sign Up
+UC-02: Login / Sign In
+UC-03: Upload Document
+UC-04: View Knowledge Base
+UC-05: Delete Document
+UC-06: Select Document for Chat
+UC-07: Select Study Mode
+UC-08: Ask Question (Q&A mode)
+UC-09: Generate Summary
+UC-10: Generate Quiz
+UC-11: Generate Flashcards
+UC-12: Copy AI Response
+UC-13: Edit User Message
+UC-14: Start New Chat Session
+
+(Full Use Case Diagram available in: diagrams/usecase_diagram.md)
+
+================================================================================
+CHAPTER 5: DETAILED DESIGN (MODELING, ERD, AND DFD)
+================================================================================
+
+5.1 Architecture Overview
+--------------------------
+ScholarAI follows a modern three-tier web architecture:
+
+  [Browser Client (React / Next.js)]
+          |
+          | HTTPS
+          v
+  [Next.js App Server (API Routes)]
+          |
+    +-----+------+
+    |             |
+    v             v
+[Convex DB    [OpenRouter
+ & Storage]    AI API]
+    |
+    v
+[Clerk Auth]
+
+The Next.js server acts as the orchestration layer: it handles authentication
+middleware, file extraction (via Node.js API routes), and proxies AI requests
+to OpenRouter. The Convex backend provides real-time reactive data persistence
+and file storage. Clerk handles authentication entirely on its own
+infrastructure, providing JWTs that the client and Convex use.
+
+5.2 Database Design (ERD)
+--------------------------
+The Convex database contains four tables:
+
+USERS
+- _id (PK), clerkId (unique), email, name, imageUrl, createdAt
+
+DOCUMENTS
+- _id (PK), userId (FK → users.clerkId), name, type, size, storageId,
+  url, extractedText, status, createdAt, updatedAt
+- Status values: "uploading" → "processing" → "ready" | "error"
+
+CHATS
+- _id (PK), userId (FK → users.clerkId), documentId (FK → documents._id,
+  optional), title, mode, createdAt, updatedAt
+- Mode values: "qa" | "summarize" | "quiz" | "flashcards"
+
+MESSAGES
+- _id (PK), chatId (FK → chats._id), role ("user" | "assistant"),
+  content, createdAt
+
+Relationships:
+- A User owns many Documents (1:N)
+- A User initiates many Chats (1:N)
+- A Document can be referenced in many Chats (1:N, optional)
+- A Chat contains many Messages (1:N)
+
+(Full ERD available in: diagrams/erd.md)
+
+5.3 Data Flow Design (DFD)
+---------------------------
+Three levels of DFD were produced for this system:
+
+LEVEL 0 — CONTEXT DIAGRAM
+At the highest level, the ScholarAI system receives inputs from a single human
+actor (Student) and interfaces with three external systems:
+  - Clerk (authentication)
+  - Convex (data and file storage)
+  - OpenRouter/GPT-4o-mini (AI inference)
+The Student sends login credentials, file uploads, and study queries to
+ScholarAI. The system returns authenticated sessions, extracted text, and
+AI-generated study material.
+(Diagram: diagrams/dfd_level0.md)
+
+LEVEL 1 — MAIN PROCESSES
+The system is decomposed into four primary processes:
+  P1: Authenticate User — interfaces with Clerk, issues session tokens
+  P2: Upload & Extract Document — stores file, extracts text, updates DB
+  P3: Manage Knowledge Base — queries and deletes documents from Convex DB
+  P4: AI Chat & Study Modes — builds prompts, calls OpenRouter, persists messages
+(Diagram: diagrams/dfd_level1.md)
+
+LEVEL 2 — SUB-PROCESSES
+Two processes are further decomposed at Level 2:
+
+P2 (Upload & Extract) breaks into 6 steps:
+  2.1 Generate Upload URL → 2.2 Upload File to Storage →
+  2.3 Save Document Record → 2.4 Send File to /api/extract-text →
+  2.5 Parse PDF / OCR Image → 2.6 Update Document with Extracted Text
+
+P4 (AI Chat) breaks into 7 steps:
+  4.1 Select Document + Mode → 4.2 Build Prompt with Doc Context →
+  4.3 Get/Create Chat Session → 4.4 Call /api/chat →
+  4.5 Save User Message → 4.6 Receive & Display Response →
+  4.7 Save Assistant Message
+(Diagram: diagrams/dfd_level2.md)
+
+5.4 Class Design
+-----------------
+The system's classes map to four categories:
+
+Data Entities: User, Document, Chat, Message
+  (Correspond directly to Convex DB tables)
+
+API Handler Classes: DocumentsAPI, ChatsAPI, ExtractTextAPI, ChatAPI
+  (Correspond to Convex mutation/query functions and Next.js API routes)
+
+Page Components: KnowledgeBasePage, DashboardPage
+  (React components that orchestrate UI, state, and API calls)
+
+Key relationships:
+  - KnowledgeBasePage depends on DocumentsAPI and ExtractTextAPI
+  - DashboardPage depends on ChatsAPI, ChatAPI, and DocumentsAPI (read)
+  - DocumentsAPI manages Document entities
+  - ChatsAPI manages Chat and Message entities
+(Full Class Diagram: diagrams/class_diagram.md)
+
+5.5 Sequence Flows
+-------------------
+Three key sequence flows are documented:
+
+SD1 — User Sign-In:
+  Student → Browser (Clerk SignIn UI) → Clerk (credential validation)
+  → Clerk (JWT) → Convex (syncUser mutation) → Redirect to /dashboard
+
+SD2 — Document Upload and Extraction:
+  Student uploads file → generateUploadUrl() → PUT to Convex Storage
+  → saveDocument() (status: processing) → POST FormData to /api/extract-text
+  → pdf-parse extracts text → updateDocumentText() (status: ready)
+
+SD3 — AI Chat Q&A:
+  Student sends message → createChat() if new session →
+  saveMessage(role: "user") → getModePrompt() injects document context →
+  POST /api/chat → OpenRouter GPT-4o-mini → response text →
+  saveMessage(role: "assistant") → Display in chat UI
+(Full Sequence Diagrams: diagrams/sequence_diagram.md)
+
+================================================================================
+CHAPTER 6: HARDWARE AND SOFTWARE PLATFORM ENVIRONMENT
+================================================================================
+
+6.1 Development Environment
+-----------------------------
+Operating System  : Linux (Arch Linux / Ubuntu compatible)
+Node.js Version   : v22.x (LTS)
+Package Manager   : npm v10.x
+IDE               : Visual Studio Code / WebStorm
+Version Control   : Git
+
+6.2 Frontend Technologies
+---------------------------
+Framework         : Next.js 16.2.6 (App Router, Turbopack)
+UI Library        : React 18
+Language          : TypeScript 5
+Styling           : Tailwind CSS v4 (utility-first CSS)
+Component Library : shadcn/ui (Radix UI primitives)
+Icons             : Lucide React
+State Management  : React useState / useEffect (local state)
+                    Convex React SDK (server state)
+Toast Alerts      : Sonner
+
+6.3 Backend Technologies
+--------------------------
+API Layer         : Next.js App Router API Routes (server-side)
+                    Route: /api/chat (AI inference proxy)
+                    Route: /api/extract-text (document parsing)
+AI SDK            : openai npm package (OpenAI-compatible client)
+PDF Parsing       : pdf-parse (Node.js native PDF text extraction)
+Runtime           : Node.js (runtime = "nodejs" for API routes)
+
+6.4 Cloud Services
+-------------------
+Database & Storage: Convex (convex.dev)
+                    - Real-time reactive NoSQL document database
+                    - Built-in file storage (blob storage)
+                    - Auto-generated TypeScript API client
+Authentication    : Clerk (clerk.com)
+                    - JWT-based session management
+                    - Pre-built SignIn / SignUp UI components
+                    - Webhook for user sync to Convex
+AI Model Provider : OpenRouter (openrouter.ai)
+                    - Proxy to multiple LLM providers
+                    - Model used: openai/gpt-4o-mini
+                    - OpenAI-compatible REST API
+
+6.5 Deployment Requirements (Production)
+-----------------------------------------
+Hosting           : Vercel (recommended for Next.js)
+Environment Vars  : OPENROUTER_API_KEY
+                    NEXT_PUBLIC_CONVEX_URL
+                    CLERK_PUBLISHABLE_KEY
+                    CLERK_SECRET_KEY
+                    CLERK_JWT_ISSUER_DOMAIN
+Min. Memory       : 512 MB RAM (Vercel Hobby tier sufficient)
+Bandwidth         : Scales automatically with Convex and Vercel CDN
+
+6.6 Hardware Requirements (End User)
+--------------------------------------
+Any modern web browser (Chrome 90+, Firefox 88+, Edge 90+, Safari 14+)
+Minimum: 4 GB RAM, stable internet connection
+Mobile browser support: Responsive layout, works on smartphones
+
+================================================================================
+CHAPTER 7: EXPERIMENTAL SETUP AND RESULTS ANALYSIS
+================================================================================
+
+7.1 Development and Testing Setup
+-----------------------------------
+The application was developed and tested on a local development machine running
+Arch Linux. Two concurrent processes were maintained during development:
+
+Process 1 — Convex Dev Server:
+  Command: npx convex dev
+  Function: Watches convex/ directory, pushes schema and function changes
+  to the Convex cloud in real time. Provides a local Convex dashboard
+  for data inspection.
+
+Process 2 — Next.js Dev Server:
+  Command: npm run dev
+  Function: Starts Next.js with Turbopack HMR on http://localhost:3000
+  Provides instant hot module replacement for frontend changes.
+
+Test data used:
+  - React Native Official Documentation (PDF, ~300 pages)
+  - Sample image screenshots of code
+  - Plain text study notes
+
+7.2 Feature Testing Results
+-----------------------------
+The following features were manually tested end-to-end:
+
+AUTHENTICATION
+  Test: Register new user with email
+  Result: PASS — Clerk issued JWT, user synced to Convex DB
+
+  Test: Login with existing account
+  Result: PASS — Protected routes accessible; redirects work correctly
+
+DOCUMENT UPLOAD (FormData approach, post-migration)
+  Test: Upload a large PDF (>10 MB) via Knowledge Base page
+  Result: PASS after fix — FormData bypass of middleware 10 MB limit.
+  Initial attempts with JSON/base64 approach FAILED (413 payload too large).
+
+TEXT EXTRACTION
+  Test: Extract text from React Native guide PDF
+  Result: PARTIAL — pdf-parse library had multiple compatibility issues with
+  Next.js 15 Turbopack's ESM/CJS module resolution. Required multiple
+  workaround iterations (dynamic import, eval require, module export
+  resolution). Final resolution achieved using dynamic import with
+  PDFParse named export, then pdfParseFn class instantiation.
+
+AI CHAT — Q&A MODE
+  Test: Ask "What is this document about?" with React Native PDF selected
+  Result: PASS — AI correctly summarised the document using injected
+  extracted text as context.
+
+  Test: Ask with no document selected
+  Result: EXPECTED BEHAVIOUR — AI responded generically without document
+  context, noting no document was provided.
+
+AI CHAT — SUMMARIZE MODE
+  Test: Click Generate Summary with document selected
+  Result: PASS — AI produced structured markdown summary with key points.
+
+AI CHAT — QUIZ MODE
+  Test: Generate Quiz with document selected
+  Result: PASS — AI generated 5 MCQ questions with correct answers marked.
+
+AI CHAT — FLASHCARDS MODE
+  Test: Generate Flashcards
+  Result: PASS — AI generated 8 Q&A flashcard pairs.
+
+COPY & EDIT FEATURES
+  Test: Copy AI response
+  Result: PASS — Clipboard API invoked; button changed to "Copied" for 2s.
+
+  Test: Edit user message
+  Result: PASS — Message text populated in input field; textarea focused.
+
+SCROLLING FIX
+  Test: Long AI response overflows chat area
+  Result: PASS (after fix) — Added min-h-0 to ScrollArea flex container
+  and break-words + overflow-x-auto to message bubbles.
+
+7.3 Performance Observations
+------------------------------
+AI Response Latency : 1 - 4 seconds (GPT-4o-mini, OpenRouter)
+Document Upload     : ~2 seconds for a 5 MB PDF (Convex Storage)
+Text Extraction     : ~1-3 seconds (pdf-parse server-side)
+Page Load (cold)    : ~5-6 seconds (Convex reactive query hydration)
+Page Load (warm)    : < 300 ms (cached queries)
+
+7.4 Bugs Encountered and Resolved
+------------------------------------
+BUG-01: Model ID "google/gemini-1.5-flash" returned 400 error from OpenRouter.
+  Fix: Migrated to "openai/gpt-4o-mini" (valid OpenRouter model ID).
+
+BUG-02: JSON body size limit (10 MB) blocked large base64-encoded PDF upload.
+  Fix: Migrated /api/extract-text to accept multipart/form-data (FormData).
+       Updated Clerk middleware to exclude /api/extract-text from matching.
+
+BUG-03: pdf-parse import failed with "Export default doesn't exist" in
+  Next.js 15 Turbopack due to ESM/CJS module resolution conflict.
+  Fix: Used dynamic async import() with PDFParse named export resolution.
+
+BUG-04: Chat area did not scroll when AI responses were long.
+  Fix: Added min-h-0 to ScrollArea flex container; break-words to bubbles.
+
+BUG-05: AI responded "no document provided" even when document was selected.
+  Root Cause: Documents uploaded before extraction fix had empty extractedText.
+  Fix: Users must re-upload documents; new uploads populate extractedText.
+
+================================================================================
+CHAPTER 8: PROJECT LIMITATIONS AND FUTURE SCOPE
+================================================================================
+
+8.1 Current Limitations
+-------------------------
+L-01: PDF Extraction Fragility
+  The pdf-parse library has deep compatibility issues with Next.js 15's
+  Turbopack build system due to ESM/CJS module conflicts and missing DOM
+  polyfills (DOMMatrix, ImageData). This required multiple workarounds and
+  remains a maintenance risk. A more robust solution (e.g., a dedicated
+  microservice or Cloudflare Worker) would be more reliable in production.
+
+L-02: No Vector Search / True RAG
+  The current implementation injects the entire document text (up to 8000
+  characters) into the prompt context. For very large documents (hundreds
+  of pages), this means only the first portion is analysed. True Retrieval-
+  Augmented Generation with vector embeddings (e.g., using Pinecone or
+  Convex vector search) would enable accurate responses across entire books.
+
+L-03: No Markdown Rendering in Chat
+  AI responses contain markdown formatting (headers, bold, bullet points,
+  code blocks) but are rendered as plain text. The react-markdown library
+  was planned for integration but could not be installed in the constrained
+  development environment. Chat readability suffers for structured responses.
+
+L-04: Single-User Architecture
+  Each document and chat session is scoped to a single user. There is no
+  mechanism for sharing documents or collaborating on study sessions.
+
+L-05: No Streaming Responses
+  AI responses are fetched as a single blocking call. For long responses
+  (quiz generation, flashcard sets), this introduces a noticeable delay
+  (3-5 seconds) with no partial-result feedback to the user.
+
+L-06: No Offline Support
+  The application requires an active internet connection for all features.
+  There is no caching or offline-first architecture.
+
+L-07: File Type Support
+  Only PDFs, images, and plain text files are supported. Common academic
+  formats such as .docx, .pptx, .epub, and .xlsx are not handled.
+
+8.2 Future Scope
+-----------------
+FS-01: Markdown Rendering
+  Integrate react-markdown with remark-gfm to render AI responses as
+  rich formatted text (tables, code blocks, lists, bold/italic).
+
+FS-02: Streaming AI Responses
+  Implement Server-Sent Events (SSE) or the OpenAI streaming API to
+  stream AI tokens to the client incrementally, dramatically improving
+  perceived response speed.
+
+FS-03: Vector Search / Full RAG Pipeline
+  Integrate Convex vector search or Pinecone to chunk, embed, and index
+  document text. This would allow precise retrieval of relevant sections
+  from large documents, overcoming the 8000-character context limit.
+
+FS-04: Extended File Type Support
+  Add server-side parsers for .docx (mammoth.js), .pptx (node-pptx), and
+  .epub. This would make ScholarAI useful across all types of academic
+  material.
+
+FS-05: Collaborative Study Rooms
+  Enable students to share documents and co-study in real-time using
+  Convex's live subscription model. Shared chats and annotations could
+  facilitate group study sessions.
+
+FS-06: Spaced Repetition System (SRS)
+  Persist generated flashcards and implement a spaced repetition scheduler
+  (similar to Anki) to help students review cards at optimal intervals.
+
+FS-07: Learning Analytics Dashboard
+  Track study patterns: time spent per document, topics explored, quiz
+  scores over time. Visualise learning progress with charts.
+
+FS-08: Mobile Application
+  Develop a React Native mobile app using Expo, sharing the same Convex
+  backend, to enable on-the-go study sessions.
+
+FS-09: OCR for Handwritten Notes
+  Integrate a dedicated handwriting recognition model (e.g., Google Vision
+  API) to support scanned handwritten lecture notes.
+
+FS-10: Multi-Language Support
+  Enable AI responses and UI in multiple languages to improve accessibility
+  for non-English-speaking students.
+
+================================================================================
+CHAPTER 9: LIST OF REFERENCES
+================================================================================
+
+[1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L.,
+    Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017).
+    "Attention Is All You Need."
+    Advances in Neural Information Processing Systems (NeurIPS), 30.
+    https://arxiv.org/abs/1706.03762
+
+[2] Brown, T. B., Mann, B., Ryder, N., et al. (2020).
+    "Language Models are Few-Shot Learners."
+    Advances in Neural Information Processing Systems (NeurIPS), 33.
+    https://arxiv.org/abs/2005.14165
+
+[3] Lewis, P., Perez, E., Piktus, A., et al. (2020).
+    "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks."
+    Advances in Neural Information Processing Systems (NeurIPS), 33.
+    https://arxiv.org/abs/2005.11401
+
+[4] Koedinger, K. R., & Corbett, A. (2006).
+    "Cognitive Tutors: Technology Bringing Learning Science to the Classroom."
+    The Cambridge Handbook of the Learning Sciences, pp. 61-78.
+
+[5] OpenAI. (2024). GPT-4o-mini Model Card.
+    https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/
+
+[6] OpenRouter Documentation. (2024).
+    API Reference and Model Catalogue.
+    https://openrouter.ai/docs
+
+[7] Convex Documentation. (2024).
+    Convex Backend Platform — Database, File Storage, and Functions.
+    https://docs.convex.dev
+
+[8] Clerk Documentation. (2024).
+    Authentication and User Management for Next.js.
+    https://clerk.com/docs
+
+[9] Next.js Documentation. (2024).
+    Next.js 15 App Router, API Routes, and Turbopack.
+    https://nextjs.org/docs
+
+[10] shadcn/ui Documentation. (2024).
+     Re-usable components built with Radix UI and Tailwind CSS.
+     https://ui.shadcn.com
+
+[11] Rashid, T., & Ahmad, H. (2023).
+     "AI-Powered Personalized Learning: A Review of Current Systems."
+     International Journal of Educational Technology in Higher Education, 20(1).
+
+[12] Holmes, W., Bialik, M., & Fadel, C. (2019).
+     "Artificial Intelligence in Education: Promises and Implications for
+     Teaching and Learning."
+     Center for Curriculum Redesign, Boston.
+
+================================================================================
+                            END OF REPORT
+================================================================================
