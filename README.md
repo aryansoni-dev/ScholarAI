@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>🎓 ScholarAI</h1>
+  <p><strong>Your Ultimate AI-Powered Study Assistant</strong></p>
+</div>
 
-## Getting Started
+![Hero Screenshot](ss/hero.png)
 
-First, run the development server:
+## 📌 Overview
 
+**ScholarAI** is a comprehensive, web-based platform designed to transform how students interact with their study materials. Rather than using disconnected PDF readers and generic AI chatbots, ScholarAI provides a unified experience. You can upload digital study resources (PDFs, PPTs, etc.), extract their text automatically, and study them using context-aware AI.
+
+Whether you need quick summarization, automated quiz generation, Q&A on specific documents, or flashcard creation, ScholarAI grounds every interaction in *your* uploaded knowledge base.
+
+## 🚀 Features
+
+- **📚 Personal Knowledge Base:** Upload study documents (PDF, Presentation, Text). Automatic text extraction securely stores the content.
+- **🤖 Context-Aware AI Chat:** Ask questions and get answers *based entirely* on your provided documents, avoiding generic, unreliable AI responses.
+- **🔄 Multiple Study Modes:**
+  - **Q&A Mode:** Clear your doubts from the text.
+  - **Summarization Mode:** Condense long chapters into bite-sized summaries.
+  - **Quiz Generation:** Challenge yourself with AI-generated questions to test your knowledge.
+  - **Flashcards:** Auto-create interactive flashcards to drill core concepts.
+- **🔐 Secure Authentication:** Seamless user onboarding via Clerk.
+- **⚡ Real-Time Sync:** Instant UI updates and real-time backend powered by Convex.
+
+## 📸 Screenshots
+
+| Feature | Screenshot |
+|---------|-----------|
+| **Dashboard / CTA** | ![CTA](ss/cta.png) |
+| **Project Features** | ![Features](ss/features.png) |
+| **Knowledge Base** | ![Knowledge Base](ss/knowledge_base.png) |
+| **Study Workflow** | ![Workflow](ss/workflow.png) |
+| **AI Chat & Study** | ![Chat](ss/chat.png) |
+| **User Profile** | ![Profile](ss/profile.png) |
+
+## 🛠️ Tech Stack
+
+ScholarAI is built using a modern full-stack web ecosystem:
+
+- **Frontend:** [Next.js 16](https://nextjs.org/) (App Router), React 19, Tailwind CSS, Shadcn UI / Radix UI
+- **Backend & Database:** [Convex](https://convex.dev/) (Serverless Database & Functions)
+- **Authentication:** [Clerk](https://clerk.com/)
+- **AI & Processing:** AI SDK, OpenRouter (GPT-4o-mini), `pdf-parse` for text extraction
+- **Language:** TypeScript
+
+## 🏎️ Getting Started
+
+Follow these steps to run ScholarAI locally:
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/scholarai.git
+cd scholarai
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Set up Environment Variables
+Rename `.env.example` to `.env.local` (or create it) and add your keys:
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_CONVEX_URL=your_convex_url
+OPENROUTER_API_KEY=your_openrouter_api_key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Start the Convex Backend
+```bash
+npx convex dev
+```
 
-## Learn More
+### 5. Start the Next.js Development Server
+In a separate terminal tab:
+```bash
+npm run dev
+```
+Your app will be available on [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The core philosophy of ScholarAI leverages **RAG (Retrieval-Augmented Generation)** techniques. By extracting and indexing document context into a Convex real-time database, prompts sent to the LLM are enriched with specific file context, ensuring the study assistant remains completely grounded in the user's specific learning materials.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+Contributions, issues, and feature requests are welcome! Feel free to check out the issues page if you want to contribute.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+> Developed as an innovative educational tool combining document management and intelligent tutoring natively.
