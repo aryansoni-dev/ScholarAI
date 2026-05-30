@@ -29,8 +29,8 @@ Whether you need quick summarization, automated quiz generation, Q&A on specific
 |---------|-----------|
 <!-- | **Dashboard / CTA** | ![CTA](ss/cta.png) | -->
 | **Project Features** | ![Features](ss/features.png) |
-| **Knowledge Base** | ![Knowledge Base](ss/knowledge_base.png) |
 | **Study Workflow** | ![Workflow](ss/workflow.png) |
+| **Knowledge Base** | ![Knowledge Base](ss/knowledge_base.png) |
 | **AI Chat & Study** | ![Chat](ss/chat.png) |
 <!-- | **User Profile** | ![Profile](ss/profile.png) | -->
 
