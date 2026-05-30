@@ -32,7 +32,7 @@ Whether you need quick summarization, automated quiz generation, Q&A on specific
 | **Knowledge Base** | ![Knowledge Base](ss/knowledge_base.png) |
 | **Study Workflow** | ![Workflow](ss/workflow.png) |
 | **AI Chat & Study** | ![Chat](ss/chat.png) |
-| **User Profile** | ![Profile](ss/profile.png) |
+<!-- | **User Profile** | ![Profile](ss/profile.png) | -->
 
 ## 🛠️ Tech Stack
 
