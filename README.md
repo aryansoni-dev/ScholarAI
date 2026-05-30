@@ -27,7 +27,7 @@ Whether you need quick summarization, automated quiz generation, Q&A on specific
 
 | Feature | Screenshot |
 |---------|-----------|
-| **Dashboard / CTA** | ![CTA](ss/cta.png) |
+<!-- | **Dashboard / CTA** | ![CTA](ss/cta.png) | -->
 | **Project Features** | ![Features](ss/features.png) |
 | **Knowledge Base** | ![Knowledge Base](ss/knowledge_base.png) |
 | **Study Workflow** | ![Workflow](ss/workflow.png) |
